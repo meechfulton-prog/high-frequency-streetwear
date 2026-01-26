@@ -2,14 +2,204 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>High Frequency Streetwear</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <h1>High Frequency Streetwear</h1>
-  <p>Wear the message. Move with the frequency.</p>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <div class="brand">
+        <div class="logo">HF</div>
+        <div class="brand__text">
+          <div class="brand__name">High Frequency</div>
+          <div class="brand__tag">Streetwear</div>
+        </div>
+      </div>
 
-  <script src="script.js"></script>
+      <nav class="nav">
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact" class="pill">Order</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="kicker">Banksy-inspired streetwear</p>
+          <h1>Wear the message.<br/>Move with the frequency.</h1>
+          <p class="sub">
+            Limited drops • Clean silhouettes • Bold art energy.
+            Orders handled manually via Instagram.
+          </p>
+
+          <div class="cta">
+            <a class="btn btn--primary" href="https://instagram.com/highfrequency.streetwear" target="_blank" rel="noreferrer">
+              DM to Order
+            </a>
+            <a class="btn btn--ghost" href="#shop">View Drop</a>
+          </div>
+
+          <div class="badges">
+            <span class="badge">Limited Drops</span>
+            <span class="badge">Premium Fit</span>
+            <span class="badge">Street Art Theme</span>
+          </div>
+        </div>
+
+        <div class="hero__panel">
+          <h3>Current Drop</h3>
+          <p class="muted">Urban Stencil Vol. 1</p>
+          <div class="line"></div>
+          <p class="small">
+            Add your favorite items below, then message us on Instagram with:
+            <strong>item + size + color</strong>.
+          </p>
+          <a class="link" href="#contact">How ordering works →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="shop">
+      <div class="container">
+        <div class="section__head">
+          <h2>Featured Pieces</h2>
+          <p class="muted">Tap “Order” to DM us on Instagram. (No checkout yet.)</p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card__img">TEE</div>
+            <div class="card__body">
+              <h3>Stencil Logo Tee</h3>
+              <p class="muted">Heavyweight cotton • Black/White</p>
+              <div class="row">
+                <span class="price">$35</span>
+                <a class="btn btn--small btn--primary"
+                   href="https://instagram.com/highfrequency.streetwear"
+                   target="_blank" rel="noreferrer">Order</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__img">HOODIE</div>
+            <div class="card__body">
+              <h3>Frequency Hoodie</h3>
+              <p class="muted">Fleece • Oversized fit</p>
+              <div class="row">
+                <span class="price">$75</span>
+                <a class="btn btn--small btn--primary"
+                   href="https://instagram.com/highfrequency.streetwear"
+                   target="_blank" rel="noreferrer">Order</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__img">CAP</div>
+            <div class="card__body">
+              <h3>Tagline Cap</h3>
+              <p class="muted">Embroidered • Adjustable</p>
+              <div class="row">
+                <span class="price">$25</span>
+                <a class="btn btn--small btn--primary"
+                   href="https://instagram.com/highfrequency.streetwear"
+                   target="_blank" rel="noreferrer">Order</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__img">POSTER</div>
+            <div class="card__body">
+              <h3>Wall Art Poster</h3>
+              <p class="muted">Matte print • 18×24</p>
+              <div class="row">
+                <span class="price">$20</span>
+                <a class="btn btn--small btn--primary"
+                   href="https://instagram.com/highfrequency.streetwear"
+                   target="_blank" rel="noreferrer">Order</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="about">
+      <div class="container two">
+        <div>
+          <h2>About High Frequency</h2>
+          <p class="muted">
+            High Frequency Streetwear blends clean silhouettes with statement graphics inspired by street art culture.
+            Built for the city — designed to stand out without trying too hard.
+          </p>
+
+          <ul class="list">
+            <li>Limited releases and drop culture</li>
+            <li>Banksy-inspired visual language</li>
+            <li>Premium feel, everyday wear</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Brand Note</h3>
+          <p class="muted small">
+            Want a real store checkout next? We can add Stripe or Shopify later.
+          </p>
+          <div class="line"></div>
+          <p class="small">
+            For now: DM us your order details on Instagram and we’ll confirm availability + shipping.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section__head">
+          <h2>Order & Contact</h2>
+          <p class="muted">Fastest way: Instagram DM.</p>
+        </div>
+
+        <div class="contact">
+          <div class="panel">
+            <h3>Instagram</h3>
+            <p class="muted">Message us with: item • size • color • city/state</p>
+            <a class="btn btn--primary" href="https://instagram.com/highfrequency.streetwear" target="_blank" rel="noreferrer">
+              @highfrequency.streetwear
+            </a>
+            <p class="small muted" style="margin-top:10px;">
+              Example: “Frequency Hoodie, Large, Black, Baltimore MD”
+            </p>
+          </div>
+
+          <div class="panel">
+            <h3>Drop Updates</h3>
+            <p class="muted">Add an email form here later if you want.</p>
+            <div class="line"></div>
+            <p class="small">Next upgrades I can add: product images, size selector, cart list, and Stripe checkout.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> High Frequency Streetwear</p>
+      <a href="#top" class="link">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
