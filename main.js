@@ -12,7 +12,7 @@ function setSoldOut(cardIndex, isSoldOut) {
   cards[cardIndex].classList.toggle('isSoldOut', isSoldOut);
 }
 
-/* ─── Stripe init (lazy — fires on first modal open) ─────── */
+/* ─── Stripe init ─────────────────────────────────────────── */
 let stripe, cardElement;
 
 function initStripe() {
@@ -37,9 +37,9 @@ function initStripe() {
   cardElement = elements.create('card', {
     style: {
       base: {
-        color:       '#fff',
-        fontFamily:  'DM Sans, sans-serif',
-        fontSize:    '15px',
+        color:      '#fff',
+        fontFamily: 'DM Sans, sans-serif',
+        fontSize:   '15px',
         '::placeholder': { color: 'rgba(255,255,255,0.3)' },
       },
       invalid: { color: '#ff6b6b' }
@@ -48,44 +48,58 @@ function initStripe() {
 
   cardElement.mount('#card-element');
 
-  cardElement.on('change', ({ error }) => {
-    document.getElementById('card-errors').textContent = error ? error.message : '';
+  cardElement.on('change', function(e) {
+    var el = document.getElementById('card-errors');
+    if (el) el.textContent = e.error ? e.error.message : '';
   });
 }
 
 /* ─── Modal open / close ─────────────────────────────────── */
 function openMembershipModal() {
-  document.getElementById('membershipModal').classList.add('active');
+  var modal = document.getElementById('membershipModal');
+  if (!modal) { console.error('Modal not found'); return; }
+  modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  setTimeout(initStripe, 100);
+  setTimeout(initStripe, 150);
 }
 
-function closeMembershipModal(event) {
-  // If called from overlay click, only close if clicking the overlay itself
-  if (event && event.target !== document.getElementById('membershipModal')) return;
-  _closeModal();
-}
-
-function _closeModal() {
-  document.getElementById('membershipModal').classList.remove('active');
+function closeModal() {
+  var modal = document.getElementById('membershipModal');
+  if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') _closeModal();
+// Called from overlay onclick — only close if clicking the dark overlay itself
+function closeMembershipModal(event) {
+  if (event) {
+    if (event.target && event.target.id === 'membershipModal') {
+      closeModal();
+    }
+  } else {
+    closeModal();
+  }
+}
+
+// Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
 });
 
 /* ─── Payment handler ────────────────────────────────────── */
 async function handlePayment(e) {
   e.preventDefault();
-  if (!stripe || !cardElement) return;
 
-  const btnText    = document.getElementById('btnText');
-  const btnSpinner = document.getElementById('btnSpinner');
-  const submitBtn  = document.getElementById('submitBtn');
-  const errorEl    = document.getElementById('card-errors');
-  const name       = document.getElementById('cardName').value.trim();
-  const email      = document.getElementById('cardEmail').value.trim();
+  if (!stripe || !cardElement) {
+    document.getElementById('card-errors').textContent = 'Payment system not loaded. Please refresh and try again.';
+    return;
+  }
+
+  var btnText    = document.getElementById('btnText');
+  var btnSpinner = document.getElementById('btnSpinner');
+  var submitBtn  = document.getElementById('submitBtn');
+  var errorEl    = document.getElementById('card-errors');
+  var name       = document.getElementById('cardName').value.trim();
+  var email      = document.getElementById('cardEmail').value.trim();
 
   // Loading state
   btnText.style.display    = 'none';
@@ -94,27 +108,26 @@ async function handlePayment(e) {
   errorEl.textContent      = '';
 
   try {
-    // 1. Call Netlify function to create Stripe subscription
-    const res = await fetch('/api/create-subscription', {
+    // Call Netlify function
+    var res = await fetch('/api/create-subscription', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ name, email })
+      body:    JSON.stringify({ name: name, email: email })
     });
 
-    const data = await res.json();
+    var data = await res.json();
     if (data.error) throw new Error(data.error);
 
-    // 2. Confirm card payment with Stripe.js
-    const { error: stripeError } = await stripe.confirmCardPayment(data.clientSecret, {
+    // Confirm card payment
+    var result = await stripe.confirmCardPayment(data.clientSecret, {
       payment_method: {
-        card:             cardElement,
-        billing_details:  { name, email }
+        card:            cardElement,
+        billing_details: { name: name, email: email }
       }
     });
 
-    if (stripeError) throw new Error(stripeError.message);
+    if (result.error) throw new Error(result.error.message);
 
-    // 3. Success
     showSuccess(name, email);
 
   } catch (err) {
@@ -127,31 +140,21 @@ async function handlePayment(e) {
 
 /* ─── Success screen ─────────────────────────────────────── */
 function showSuccess(name, email) {
-  const firstName = name ? name.split(' ')[0] : '';
-  document.getElementById('paymentForm').innerHTML = `
-    <div style="text-align:center; padding:24px 0;">
-      <div style="font-size:3.5rem; margin-bottom:14px;">✅</div>
-      <h3 style="margin-bottom:10px; font-size:1.3rem;">
-        Welcome to the Inner Circle${firstName ? ', ' + firstName : ''}!
-      </h3>
-      <p style="color:var(--muted); font-size:.92rem; line-height:1.7;">
-        You're in. Check <strong style="color:#fff;">${email}</strong>
-        for your confirmation and access details.
-      </p>
-      <div style="margin-top:16px; padding:14px; border-radius:12px;
-                  background:rgba(0,229,200,.08); border:1px solid rgba(0,229,200,.2);">
-        <p style="font-size:.85rem; color:var(--tech); font-weight:900; margin-bottom:4px;">
-          WHAT'S NEXT
-        </p>
-        <p style="font-size:.85rem; color:var(--muted); line-height:1.6;">
-          You'll receive a welcome email with your member dashboard link,
-          video library access, and instructions to book your first 1-on-1 session.
-        </p>
-      </div>
-      <button class="btn btn--tech"
-        style="margin-top:20px; width:100%; justify-content:center;"
-        onclick="_closeModal()">
-        Back to Site
-      </button>
-    </div>
-  `;
+  var firstName = name ? name.split(' ')[0] : '';
+  document.getElementById('paymentForm').innerHTML =
+    '<div style="text-align:center; padding:24px 0;">' +
+      '<div style="font-size:3.5rem; margin-bottom:14px;">✅</div>' +
+      '<h3 style="margin-bottom:10px;">Welcome to the Inner Circle' + (firstName ? ', ' + firstName : '') + '!</h3>' +
+      '<p style="color:var(--muted); font-size:.92rem; line-height:1.7;">' +
+        'You\'re in. Check <strong style="color:#fff;">' + email + '</strong> for your confirmation and access details.' +
+      '</p>' +
+      '<div style="margin-top:16px; padding:14px; border-radius:12px; background:rgba(0,229,200,.08); border:1px solid rgba(0,229,200,.2);">' +
+        '<p style="font-size:.85rem; color:var(--tech); font-weight:900; margin-bottom:4px;">WHAT\'S NEXT</p>' +
+        '<p style="font-size:.85rem; color:var(--muted); line-height:1.6;">You\'ll receive a welcome email with your member dashboard link, video library access, and instructions to book your first 1-on-1 session.</p>' +
+      '</div>' +
+      '<button class="btn btn--tech" style="margin-top:20px; width:100%; justify-content:center;" onclick="closeModal()">Back to Site</button>' +
+    '</div>';
+}
+
+/* ─── Debug: confirm script loaded ──────────────────────── */
+console.log('HF main.js loaded ✓');
